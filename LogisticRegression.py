@@ -18,11 +18,14 @@ class LogisticRegression:
         for _ in range(self.epochs):
             y_predicted = 1 / (1 + np.exp(-(np.dot(X, self.weights) + self.bias)))
 
-            dw = (1 / m) * np.dot(X.T, (y_predicted - y)) + (self.regularizedParam / m) * self.weights
-            db = (1 / m) * np.sum(y_predicted - y)
+            dw = (1 / m) * np.dot(X.T, (y-y_predicted)) + (self.regularizedParam / m) * self.weights
+            db = (1 / m) * np.sum(y-y_predicted)
 
             self.weights -= self.learningRate * dw
             self.bias -= self.learningRate * db
 
     def predict(self, X):
+        if X.shape[1]!=self.weights.shape[0]:
+            print('Number of features dont align with number of parameters.')
+            return
         return np.where(1 / (1 + np.exp(-(np.dot(X, self.weights) + self.bias))) >= self.decisionBoundary, 1, 0)
